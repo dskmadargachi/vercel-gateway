@@ -1,0 +1,1201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>therajesh.shop – Digital Seva Kendra: Print, Photo & ID Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#f3f5f8;--panel:#fff;--ink:#0f1b2d;--mute:#5b6778;--line:#dde3ea;--line-2:#eef1f5;
+  --brand:#0e7c66;--brand-ink:#0a5c4b;--brand-soft:#e7f4f0;--brand-line:#b7ddd3;
+  --warn:#b45309;--warn-soft:#fef3c7;--bad:#c62828;--bad-soft:#fdecec;--info:#1d4ed8;--info-soft:#e3ecfd;
+  --r:12px;--r-sm:8px;--ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Figtree','Noto Sans Devanagari','Noto Sans Bengali',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+a{color:inherit}
+:focus-visible{outline:3px solid #0e7c6655;outline-offset:2px;border-radius:6px}
+.hidden{display:none!important}
+input[type=file]{display:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- top bar + tool tabs ---------- */
+.topbar{background:#fff;border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1160px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.brand-mark{width:40px;height:40px;border-radius:10px;background:var(--brand);display:grid;place-items:center;flex:none}
+.brand-name{font-weight:800;font-size:18px;letter-spacing:-.2px;line-height:1.15}
+.brand-name b{color:var(--brand);font-weight:800}
+.brand-sub{font-size:12.5px;color:var(--mute);font-weight:500}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:5px 12px;font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap}
+.tabs{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30}
+.tabs-in{max-width:1160px;margin:0 auto;padding:0 12px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs-in::-webkit-scrollbar{display:none}
+.tabs button,.tabs a{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:8px;padding:14px 16px;font-size:14.5px;font-weight:600;color:var(--mute);border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+.tabs button:hover,.tabs a:hover{color:var(--ink)}
+.tabs .on{color:var(--brand);border-bottom-color:var(--brand)}
+.tabs svg{width:18px;height:18px;flex:none}
+.tabs .sep{width:1px;background:var(--line);margin:12px 8px;flex:none}
+
+.wrap{max-width:1160px;margin:0 auto;padding:24px 20px 64px}
+@media(max-width:600px){.wrap{padding:16px 12px 56px}.topbar-in{padding:10px 12px}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:24px}
+@media(max-width:600px){.panel{padding:16px}}
+.panel-h{margin:0 0 4px;font-size:20px;font-weight:700;letter-spacing:-.2px}
+.panel-s{margin:0 0 18px;color:var(--mute);font-size:14px}
+
+/* ---------- form controls ---------- */
+label.l{display:block;font-size:13px;color:var(--ink);margin:16px 0 6px;font-weight:600}
+label.l:first-child{margin-top:0}
+input[type=text],input[type=tel],input[type=number],input[type=password],select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:var(--r-sm);font-family:inherit;font-size:15px;background:#fff;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px #0e7c6620}
+input[type=range]{width:100%;accent-color:var(--brand)}
+.seg{display:flex;gap:0;border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;background:#fff}
+.seg button{flex:1;min-width:0;padding:10px 8px;border:0;border-right:1px solid var(--line);background:#fff;font-family:inherit;font-size:14px;font-weight:600;color:var(--mute);cursor:pointer;transition:background .15s,color .15s}
+.seg button:last-child{border-right:0}
+.seg button:hover:not(:disabled){background:var(--bg);color:var(--ink)}
+.seg button.on{background:var(--brand-soft);color:var(--brand-ink)}
+.seg button:disabled{opacity:.4;cursor:not-allowed}
+.hint{font-size:13px;color:var(--mute);margin-top:6px;line-height:1.45}
+.err{color:var(--bad);font-size:13.5px;font-weight:600;margin-top:10px}
+.err:empty{display:none}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;padding:14px 16px;background:var(--brand-soft);border:1px solid var(--brand-line);border-radius:var(--r);font-size:14px;font-weight:600;color:var(--brand-ink)}
+.total b{font-size:26px;font-weight:800;color:var(--brand-ink);letter-spacing:-.5px}
+.status{text-align:center;padding:13px;border-radius:var(--r-sm);font-weight:700;margin-top:12px}
+.s-pending{background:var(--warn-soft);color:var(--warn)}
+.s-approved,.s-printing{background:var(--info-soft);color:var(--info)}
+.s-printed{background:var(--brand-soft);color:var(--brand-ink)}
+.s-rejected,.s-error{background:var(--bad-soft);color:var(--bad)}
+.big{font-size:44px;letter-spacing:8px;font-weight:800;color:var(--brand);text-align:center;margin:6px 0;font-variant-numeric:tabular-nums}
+
+/* ---------- buttons ---------- */
+.btn,.b{all:unset;box-sizing:border-box;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:var(--r-sm);background:var(--brand);color:#fff;font-family:inherit;font-size:14.5px;font-weight:600;text-align:center;border:1px solid var(--brand);transition:background .15s,border-color .15s,transform .1s}
+.btn:hover,.b:hover{background:var(--brand-ink);border-color:var(--brand-ink)}
+.btn:active,.b:active{transform:translateY(1px)}
+.btn[disabled],.b[disabled]{opacity:.45;pointer-events:none}
+.btn svg,.b svg{width:17px;height:17px;flex:none}
+.b.g{background:#fff;color:var(--ink);border-color:var(--line)}
+.b.g:hover{background:var(--bg);border-color:#c5cdd8}
+.b.g.on{background:var(--brand-soft);color:var(--brand-ink);border-color:var(--brand)}
+.b.dark{background:var(--ink);border-color:var(--ink)}
+.b.dark:hover{background:#1c2b44;border-color:#1c2b44}
+.b.sm{padding:7px 12px;font-size:13px}
+.footer-note{text-align:center;font-size:13px;color:var(--mute);margin:28px 0 6px}
+.footer-note strong{color:var(--ink)}
+.shopcard{margin:22px auto 0;max-width:620px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px;text-align:center}
+.shopcard-t{font-size:12.5px;font-weight:600;color:var(--mute)}
+.shopcard-n{font-size:19px;font-weight:800;color:var(--ink);margin-top:4px}
+.shopcard-s{font-size:13.5px;color:var(--mute);margin:4px 0 14px}
+.shopcard-b{display:inline-flex;padding:10px 16px;border-radius:var(--r-sm);background:var(--brand);color:#fff;font-weight:600;font-size:14px;text-decoration:none;margin:3px}
+.shopcard-call{background:#fff;color:var(--ink);border:1px solid var(--line)}
+
+/* ---------- modals + preview ---------- */
+.password-overlay,.preview-overlay{position:fixed;inset:0;z-index:9999;background:rgba(15,27,45,.7);display:flex;align-items:center;justify-content:center;padding:14px}
+.password-card{width:min(100%,420px);background:#fff;border-radius:var(--r);padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.3);animation:pop .2s var(--ease)}
+.password-card h2{font-size:18px;margin:0 0 8px}.password-card p{font-size:13.5px;color:var(--mute);line-height:1.5}
+.password-card input{margin:8px 0 12px}
+.password-actions{display:flex;gap:8px}.password-actions button{flex:1;padding:11px;border:0;border-radius:var(--r-sm);font-weight:600;font-size:14.5px;cursor:pointer;font-family:inherit}
+.password-actions .go{background:var(--brand);color:#fff}.password-actions .cancel{background:var(--line-2);color:var(--ink)}
+#pdfPasswordError{color:var(--bad);font-size:13px;min-height:18px}
+.preview-card{width:min(100%,900px);height:min(90vh,880px);background:#1a2436;color:#f8fafc;border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,.5);animation:pop .2s var(--ease)}
+.preview-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;background:#111a2b;border-bottom:1px solid rgba(255,255,255,.1);flex-wrap:wrap}
+.preview-title-wrap{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.preview-title-wrap strong{font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff}
+.preview-badge{background:rgba(255,255,255,.1);color:#d5dde9;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.preview-toolbar{display:flex;align-items:center;gap:6px}
+.preview-tool-btn{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#fff;border-radius:var(--r-sm);padding:6px 11px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.preview-tool-btn:hover{background:rgba(255,255,255,.16)}
+.preview-close{border:0;background:#c62828;color:#fff;border-radius:var(--r-sm);padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.preview-close:hover{background:#a81f1f}
+.preview-body{flex:1;padding:22px 16px;overflow:auto;background:#0f1726;display:flex;flex-direction:column;align-items:center;gap:18px}
+.preview-page-card{display:flex;flex-direction:column;align-items:center;gap:8px}
+.preview-page-label{color:#aebacb;font-size:12.5px;font-weight:600}
+.preview-stage{background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 12px 35px rgba(0,0,0,.45);transition:transform .2s var(--ease);transform-origin:center center}
+.preview-stage img,.preview-stage canvas{display:block;max-width:100%;height:auto}
+.skeleton{width:min(82vw,520px);height:640px;border-radius:8px;background:linear-gradient(90deg,#1a2436 25%,#26334a 50%,#1a2436 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
+.scanc{display:block;width:auto;max-width:100%;height:auto;max-height:70vh;margin:0 auto;background:#e9edf2;border-radius:var(--r-sm);touch-action:none;cursor:crosshair;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes pop{0%{opacity:0;transform:scale(.96) translateY(8px)}100%{opacity:1;transform:none}}
+@keyframes slideIn{0%{opacity:0;transform:translateX(-6px)}100%{opacity:1;transform:none}}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(6px)}100%{opacity:1;transform:none}}
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+@keyframes modalPop{0%{opacity:0;transform:scale(.96) translateY(8px)}100%{opacity:1;transform:none}}
+/* ---------- index: documents + passport ---------- */
+.desk-split{display:flex;flex-direction:column;gap:22px}
+@media(min-width:900px){.desk-split.has-items{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.9fr);gap:28px;align-items:start}
+ .desk-sticky{position:sticky;top:72px}}
+.desk-sticky{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.desk-split:not(.has-items){gap:0}
+#list:empty,#ppWork.hidden{margin:0}
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px dashed var(--brand-line);border-radius:var(--r);padding:36px 18px;text-align:center;background:var(--brand-soft);cursor:pointer;transition:border-color .15s,background .15s}
+.drop:hover{border-color:var(--brand);background:#dff0eb}
+.drop-icon{width:52px;height:52px;border-radius:12px;background:#fff;border:1px solid var(--brand-line);color:var(--brand);display:grid;place-items:center;margin-bottom:12px}
+.drop-icon svg{width:26px;height:26px}
+.drop strong{display:block;font-size:17px;margin-bottom:4px}
+.drop span{color:var(--mute);font-size:13.5px;max-width:380px;line-height:1.45}
+#list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.file{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r);background:#fff;font-size:14px;animation:slideIn .25s var(--ease) both}
+.file-thumb{width:52px;height:66px;border-radius:6px;border:1px solid var(--line);background:var(--bg);display:grid;place-items:center;overflow:hidden;flex:none;cursor:pointer;position:relative}
+.file-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.file-thumb .zoom-ov{position:absolute;inset:0;background:rgba(15,27,45,.55);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700;opacity:0;transition:opacity .15s}
+.file-thumb:hover .zoom-ov{opacity:1}
+.file-thumb .badge{position:absolute;bottom:0;left:0;right:0;background:var(--ink);color:#fff;font-size:9.5px;font-weight:700;text-align:center;padding:2px 0}
+.file-info{flex:1;min-width:0}
+.file .n{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+.file .n:hover{color:var(--brand)}
+.file-sub{font-size:12.5px;color:var(--mute);margin-top:2px;display:flex;align-items:center;gap:6px}
+.file input[type=number]{width:54px;flex:none;padding:7px 4px;text-align:center;font-weight:600}
+.file .prev-btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:var(--r-sm);padding:8px 12px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;flex:none}
+.file .prev-btn:hover{background:var(--bg)}
+.file .del-btn{border:0;background:transparent;color:var(--bad);width:32px;height:32px;border-radius:var(--r-sm);font-size:15px;font-weight:700;cursor:pointer;display:grid;place-items:center;flex:none}
+.file .del-btn:hover{background:var(--bad-soft)}
+@media(max-width:520px){.file{flex-wrap:wrap;gap:8px 10px}.file-info{flex:1 1 calc(100% - 74px)}.file > span{display:none}.file .del-btn{margin-left:auto}}
+.btn{display:flex;width:100%;margin-top:14px;padding:14px 18px;font-size:15.5px}
+.csrow{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.csrow input[type=number]{width:96px!important;flex:none}.csrow select{width:auto!important;flex:none}.csrow small{color:var(--mute);font-size:12.5px}
+#sizeSeg{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
+#sizeSeg button{grid-column:span 2;border-bottom:1px solid var(--line)}
+#sizeSeg button[data-v=pass],#sizeSeg button[data-v=custom]{grid-column:span 3}
+#paperSeg button,#sheetSeg button{white-space:nowrap}
+.sw{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sw button{width:38px;height:38px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}
+.sw button.on{border-color:var(--brand);box-shadow:0 0 0 2px #fff inset,0 0 0 1px var(--brand)}
+.sw .orig{background:repeating-conic-gradient(#cbd5e1 0 25%,#fff 0 50%) 50%/12px 12px}
+.sw input[type=color]{width:38px;height:38px;border:0;padding:0;background:none;cursor:pointer}
+.cropbox{display:flex;justify-content:center;margin:12px 0}
+#crop{border-radius:6px;box-shadow:0 0 0 2px var(--brand);touch-action:none;background:#e2e8f0;cursor:grab}
+.prog{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px}
+.prog i{display:block;height:100%;width:0;background:var(--brand);transition:width .2s}
+.sheet{max-width:100%;border:1px solid var(--line);border-radius:var(--r-sm);margin-top:10px}
+.privacy{font-size:13px;color:var(--mute);text-align:center;margin-top:22px}
+.tools-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:24px}
+.tool-link{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px;text-decoration:none;transition:border-color .15s}
+.tool-link:hover{border-color:var(--brand)}
+.tool-link svg{width:24px;height:24px;color:var(--brand);flex:none;margin-top:2px}
+.tool-link b{display:block;font-size:15px}.tool-link span{font-size:13px;color:var(--mute)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-print" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.5 17c.6-2 2-3 3.5-3s2.9 1 3.5 3M15 9h3M15 13h3"/></symbol>
+<symbol id="i-crop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14M2 6h14a2 2 0 0 1 2 2v14"/></symbol>
+<symbol id="i-scan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></symbol>
+<symbol id="i-pdf" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15h1.5a1.5 1.5 0 0 0 0-3H9v5M15 12h-2v5M15 14.5h-1.8"/></symbol>
+<symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></symbol>
+</defs></svg>
+
+<div class="topbar"><div class="topbar-in">
+ <a href="/" class="brand" aria-label="therajesh.shop home"><span class="brand-mark"><svg width="22" height="22" style="color:#fff"><use href="#i-print"/></svg></span>
+  <span><div class="brand-name">therajesh<b>.shop</b></div><div class="brand-sub" id="shop">Digital Seva Kendra · Instant Print Studio</div></span></a>
+ <div class="chips"><span class="chip" id="rbw">B&amp;W ₹5/page</span><span class="chip" id="rcolor">Color ₹10/page</span></div>
+</div></div>
+<nav class="tabs" aria-label="Tools"><div class="tabs-in">
+ <button id="tabDoc" class="on" type="button"><svg><use href="#i-doc"/></svg>Documents &amp; photos</button>
+ <button id="tabPP" type="button"><svg><use href="#i-user"/></svg>Passport photo</button>
+ <span class="sep"></span>
+ <a href="/cards.html"><svg><use href="#i-crop"/></svg>Card crop</a>
+ <a href="/cards.html#scanner"><svg><use href="#i-scan"/></svg>Smart scanner</a>
+</div></nav>
+<div class="wrap">
+<div id="pdfPasswordOverlay" class="password-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pdfPasswordTitle">
+    <form id="pdfPasswordForm" class="password-card">
+      <h2 id="pdfPasswordTitle">Protected PDF</h2>
+      <p id="pdfPasswordMessage">This PDF is password-protected. Enter its password to unlock it for printing.</p>
+      <label for="pdfPasswordInput" class="l">PDF password</label>
+      <input id="pdfPasswordInput" type="password" autocomplete="current-password" placeholder="Enter PDF password" required>
+      <div id="pdfPasswordError" role="status"></div>
+      <p>The password is used in this browser to prepare a printable copy. It is not added to your order or sent to the print server.</p>
+      <div class="password-actions"><button id="pdfPasswordCancel" class="cancel" type="button">Cancel file</button><button class="go" type="submit">Unlock &amp; Prepare</button></div>
+    </form>
+  </div>
+
+  <!-- STUDIO FILE PREVIEW LIGHTBOX -->
+  <div id="filePreviewOverlay" class="preview-overlay hidden" role="dialog" aria-modal="true">
+    <div class="preview-card">
+      <div class="preview-head">
+        <div class="preview-title-wrap">
+          <strong id="filePreviewTitle">Preview</strong>
+          <span id="filePreviewBadge" class="preview-badge">1 Page</span>
+        </div>
+        <div class="preview-toolbar">
+          <button id="prevZoomOut" class="preview-tool-btn" type="button" title="Zoom Out">−</button>
+          <span id="prevZoomLabel" style="font-size:12px;font-weight:700;min-width:42px;text-align:center">100%</span>
+          <button id="prevZoomIn" class="preview-tool-btn" type="button" title="Zoom In">+</button>
+          <button id="prevRotate" class="preview-tool-btn" type="button" title="Rotate 90°">↻ Rotate</button>
+          <button id="filePreviewClose" class="preview-close" type="button">✕ Close</button>
+        </div>
+      </div>
+      <div id="filePreviewBody" class="preview-body"></div>
+    </div>
+  </div>
+
+  <!-- CROP MODAL for Documents / Photos -->
+  <div id="cropOverlay" class="preview-overlay hidden" role="dialog" aria-modal="true">
+    <div class="preview-card" style="height:min(94vh,900px)">
+      <div class="preview-head">
+        <div class="preview-title-wrap"><strong id="cmTitle">Crop photo</strong><span class="preview-badge">Free crop</span></div>
+        <div class="preview-toolbar">
+          <button id="cmRotate" class="preview-tool-btn" type="button">↻ Rotate</button>
+          <button id="cmReset" class="preview-tool-btn" type="button">Full image</button>
+        </div>
+      </div>
+      <div class="preview-body" style="justify-content:center;padding:14px">
+        <canvas id="cmCanvas" class="scanc" style="max-height:62vh"></canvas>
+        <div id="cmStatus" style="font-size:12.5px;color:#cbd5e1;text-align:center;line-height:1.45">Drag on the photo to draw any crop box · drag corners/edges to resize · drag inside to move</div>
+      </div>
+      <div style="display:flex;gap:10px;padding:12px 14px;background:rgba(30,41,59,.92);border-top:1px solid rgba(255,255,255,.1)">
+        <button id="cmCancel" class="preview-close" type="button" style="flex:1;padding:12px;background:#475569">Cancel</button>
+        <button id="cmApply" class="preview-close" type="button" style="flex:2;padding:12px;background:#0e7c66;font-size:14px">✓ Apply crop</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DOCUMENTS / PHOTOS ================= -->
+  <div class="panel" id="docForm">
+    <h2 class="panel-h">Print documents and photos</h2>
+    <p class="panel-s">Upload your files, choose the paper and send them to the counter.</p>
+    <div id="docSplit" class="desk-split">
+      <div>
+        <label class="drop" for="pick">
+          <div class="drop-icon"><svg><use href="#i-up"/></svg></div>
+          <strong>Upload documents or photos</strong>
+          <span>Drag and drop, or tap to browse. PDF, JPG, PNG, Word, Excel or PowerPoint, up to 10 files. अपनी फाइल अपलोड करें</span>
+        </label>
+        <input type="file" id="pick" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+        <div id="list"></div>
+        <div class="err" id="err"></div>
+      </div>
+
+      <div id="opts" class="desk-sticky hidden">
+        <label class="l">Paper size</label>
+        <div class="seg" id="paperSeg">
+          <button data-v="A4" class="on" type="button">A4</button>
+          <button data-v="A3" type="button">A3</button>
+          <button data-v="4x6" type="button">4×6 Photo</button>
+        </div>
+        <label class="l">Print mode</label>
+        <div class="seg"><button id="bw" class="on" type="button">B&amp;W</button><button id="col" type="button">Color</button></div>
+        <label class="l">Copies</label>
+        <input type="number" id="copies" min="1" max="100" value="1" inputmode="numeric">
+        <label class="l">Your name</label>
+        <input type="text" id="name" placeholder="Enter your name" maxlength="60">
+        <label class="l">Mobile number (optional)</label>
+        <input type="tel" id="phone" placeholder="10-digit mobile" maxlength="10" inputmode="numeric">
+        <div class="total"><span><span id="pg">0</span> pages × <span id="cp">1</span> copy</span><b id="amt">₹0</b></div>
+        <button class="btn" id="submit">Send to counter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PASSPORT PHOTO ================= -->
+  <div class="panel hidden" id="ppForm">
+    <h2 class="panel-h">Passport photo sheet</h2>
+    <p class="panel-s">Upload one portrait. We fit as many photos as possible on a 4×6 or A4 sheet.</p>
+    <div id="ppSplit" class="desk-split">
+      <div>
+        <label class="drop" for="ppPick">
+          <div class="drop-icon"><svg><use href="#i-user"/></svg></div>
+          <strong>Upload a portrait for the passport sheet</strong>
+          <span>A clear front-facing photo (JPG, PNG or WebP). Background removal is built in.</span>
+        </label>
+        <input type="file" id="ppPick" accept="image/jpeg,image/png,image/webp">
+
+        <div id="ppWork" class="hidden" style="margin-top:16px">
+          <label class="l">Background colour</label>
+          <div class="sw" id="bgSw">
+            <button class="orig on" data-c="" title="Keep original" type="button"></button>
+            <button data-c="#ffffff" style="background:#fff" title="White" type="button"></button>
+            <button data-c="#2b6fd6" style="background:#2b6fd6" title="Blue" type="button"></button>
+            <button data-c="#d32f2f" style="background:#d32f2f" title="Red" type="button"></button>
+            <button data-c="#e5e7eb" style="background:#e5e7eb" title="Grey" type="button"></button>
+            <input type="color" id="bgCustom" value="#7ec8a0" title="Custom colour">
+          </div>
+          <div class="hint" id="bgMsg">Choose a colour to replace the background automatically.</div>
+          <div class="prog hidden" id="bgProg"><i></i></div>
+
+          <label class="l">Move and zoom to fit your face in the frame</label>
+          <div class="cropbox"><canvas id="crop"></canvas></div>
+          <input type="range" id="zoom" min="1" max="3" step="0.01" value="1">
+          <img id="sheetPrev" class="sheet hidden" alt="Sheet preview">
+        </div>
+        <div class="err" id="ppErr"></div>
+      </div>
+
+      <div id="ppOpts" class="desk-sticky hidden">
+        <label class="l">Photo size</label>
+        <div class="seg" id="sizeSeg">
+          <button data-v="in" class="on" type="button">35×45 mm</button>
+          <button data-v="us" type="button">2×2 inch</button>
+          <button data-v="st" type="button">25×35 mm</button>
+          <button data-v="pass" type="button">Passport 3×3.5 cm</button>
+          <button data-v="custom" type="button">Custom</button>
+        </div>
+        <div id="customSize" class="csrow hidden">
+          <input type="number" id="csW" inputmode="decimal" min="5" step="0.1" value="35" aria-label="Width">
+          <span>×</span>
+          <input type="number" id="csH" inputmode="decimal" min="5" step="0.1" value="45" aria-label="Height">
+          <select id="csU" aria-label="Unit"><option value="mm">mm</option><option value="in">inch</option></select>
+          <small>width × height</small>
+        </div>
+
+        <label class="l">Print on</label>
+        <div class="seg" id="sheetSeg">
+          <button data-v="4x6" class="on" type="button">4×6 Photo Paper</button>
+          <button data-v="A4" type="button">A4 Sheet</button>
+        </div>
+        <label class="l">How many photos?</label>
+        <select id="ppCount"></select>
+        <div class="hint" id="ppInfo"></div>
+
+        <label class="l">Your name</label>
+        <input type="text" id="ppName" placeholder="Enter your name" maxlength="60">
+        <label class="l">Mobile number (optional)</label>
+        <input type="tel" id="ppPhone" placeholder="10-digit mobile" maxlength="10" inputmode="numeric">
+        <div class="total"><span id="ppSum">1 sheet</span><b id="ppAmt">₹0</b></div>
+        <button class="btn" id="ppSubmit">Send to counter</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DONE ================= -->
+  <div class="panel hidden" id="done" style="max-width:560px;margin:0 auto">
+    <div style="text-align:center;color:var(--mute);font-size:13.5px;font-weight:600">Your order token</div>
+    <div class="big" id="oid"></div>
+    <div style="text-align:center;font-weight:700;font-size:16px" id="oamt"></div>
+    <div id="paymentBox" style="margin-top:16px;text-align:center">
+      <div class="hint">Scan and pay and printing starts automatically. Prefer cash? Show this token at the counter.</div>
+      <button class="btn hidden" id="makePayment" type="button">Try payment again</button>
+      <div id="upiDetails" class="hidden" style="margin-top:14px;padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--bg)">
+        <div style="font-weight:800;font-size:20px" id="upiAmount"></div>
+        <div id="upiQr" style="display:flex;justify-content:center;margin:14px auto;background:white;padding:12px;border-radius:12px;box-shadow:var(--shadow-sm);width:max-content;max-width:100%"></div>
+        <div class="hint" id="qrHint"></div>
+        <div id="appBtns" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0"></div>
+        <a id="upiLink" class="btn" style="text-decoration:none;margin-top:10px" href="#" target="_blank" rel="noopener">Open payment page</a>
+        <div class="hint" id="payHint">Waiting for payment… this page updates by itself once you have paid.</div>
+      </div>
+    </div>
+    <div class="status s-pending" id="ost">Waiting for counter approval…</div>
+    <div class="hint" style="text-align:center">Printing starts as soon as your payment is confirmed (or when the counter approves a cash order).</div>
+    <button class="btn" onclick="location.reload()">Start another order</button>
+  </div>
+
+  <div class="tools-strip">
+    <a class="tool-link" href="/cards.html"><svg><use href="#i-crop"/></svg><div><b>Card crop</b><span>Aadhaar, Ration, PAN, Voter, Ayushman, APAAR and ABHA cards cropped to PVC size.</span></div></a>
+    <a class="tool-link" href="/cards.html#scanner"><svg><use href="#i-scan"/></svg><div><b>Smart scanner</b><span>Turn photos of documents or ID cards into clean A4 pages, then print or save as PDF.</span></div></a>
+  </div>
+  <div class="privacy"><strong>therajesh.shop</strong> · Your files are deleted automatically right after printing.</div>
+  <div class="shopcard">
+    <div class="shopcard-t">Visit our shop</div>
+    <div class="shopcard-n">Digital Seva Kendra</div>
+    <div class="shopcard-s">Printing · Photo Print · Passport Photos · Scanning · Online Services</div>
+    <a class="shopcard-b" href="https://maps.app.goo.gl/UmdKBVE93Mx9LiMfA" target="_blank" rel="noopener">Get directions</a>
+    <a class="shopcard-b shopcard-call" href="tel:+919932250689">Call 9932250689</a>
+  </div>
+  <div class="footer-note">Developed by <strong>Rajesh Das</strong></div>
+</div>
+
+<script type="module">
+const $ = (id) => document.getElementById(id);
+let cfg = { rate: { bw: 5, color: 10 }, a3: 2, photo4x6: 20, passport: { '4x6': 30, A4: 50 } };
+
+fetch('/api/config').then((r) => r.json()).then((c) => {
+  cfg = { ...cfg, ...c };
+  $('shop').textContent = `${c.shop} · Instant Print Studio`;
+  $('rbw').textContent = `B&W ₹${c.rate.bw}/page`;
+  $('rcolor').textContent = `Color ₹${c.rate.color}/page`;
+  recalc(); ppRecalc();
+}).catch(() => {});
+
+const ext = (n) => (n.split('.').pop() || '').toLowerCase();
+const isImg = (n) => ['jpg', 'jpeg', 'png', 'webp'].includes(ext(n));
+
+/* ---------------- tabs ---------------- */
+function showTab(tab) {
+  $('tabDoc').classList.toggle('on', tab === 'doc'); $('tabPP').classList.toggle('on', tab === 'pp');
+  $('docForm').classList.toggle('hidden', tab !== 'doc'); $('ppForm').classList.toggle('hidden', tab !== 'pp');
+  history.replaceState(null, '', tab === 'pp' ? '#pp' : location.pathname);
+}
+$('tabDoc').onclick = () => showTab('doc');
+$('tabPP').onclick = () => showTab('pp');
+if (location.hash === '#pp') showTab('pp');
+
+function seg(id, cb) {
+  const el = $(id);
+  el.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
+    if (b.disabled) return;
+    el.querySelectorAll('button').forEach((x) => x.classList.remove('on'));
+    b.classList.add('on'); cb(b.dataset.v);
+  }));
+}
+
+/* =====================================================
+   DOCUMENTS / PHOTOS + ANIMATED STUDIO PREVIEW
+   ===================================================== */
+let items = []; let color = false; let paper = 'A4';
+let pZoom = 1, pRot = 0;
+
+async function imgOrient(file) {
+  try { const b = await createImageBitmap(file); const o = b.width > b.height ? 'landscape' : 'portrait'; b.close && b.close(); return o; }
+  catch { return 'portrait'; }
+}
+
+if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+async function generateThumb(file) {
+  const x = ext(file.name);
+  if (isImg(file.name)) return URL.createObjectURL(file);
+  if (x === 'pdf' && window.pdfjsLib) {
+    try {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+      const page = await pdf.getPage(1);
+      const vp = page.getViewport({ scale: 0.45 });
+      const c = document.createElement('canvas');
+      c.width = Math.max(1, Math.ceil(vp.width));
+      c.height = Math.max(1, Math.ceil(vp.height));
+      const ctx = c.getContext('2d', { alpha: false });
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, c.width, c.height);
+      await page.render({ canvasContext: ctx, viewport: vp }).promise;
+      const dataUrl = c.toDataURL('image/jpeg', 0.85);
+      page.cleanup(); pdf.destroy();
+      return dataUrl;
+    } catch { return null; }
+  }
+  return null;
+}
+
+function applyPreviewTransform() {
+  $('prevZoomLabel').textContent = Math.round(pZoom * 100) + '%';
+  document.querySelectorAll('#filePreviewBody .preview-stage').forEach((el) => {
+    el.style.transform = `scale(${pZoom}) rotate(${pRot}deg)`;
+    const margin = (pZoom - 1) * 180;
+    el.style.margin = `${Math.max(0, margin)}px 0`;
+  });
+}
+
+$('prevZoomIn').onclick = () => { pZoom = Math.min(2.5, +(pZoom + 0.25).toFixed(2)); applyPreviewTransform(); };
+$('prevZoomOut').onclick = () => { pZoom = Math.max(0.5, +(pZoom - 0.25).toFixed(2)); applyPreviewTransform(); };
+$('prevRotate').onclick = () => { pRot = (pRot + 90) % 360; applyPreviewTransform(); };
+
+async function openFilePreview(it) {
+  pZoom = 1; pRot = 0;
+  $('prevZoomLabel').textContent = '100%';
+  const overlay = $('filePreviewOverlay');
+  const body = $('filePreviewBody');
+  $('filePreviewTitle').textContent = it.file.name;
+  $('filePreviewBadge').textContent = `${it.pages} Page${it.pages > 1 ? 's' : ''}`;
+  body.innerHTML = '<div class="skeleton"></div>';
+  overlay.classList.remove('hidden');
+
+  const x = ext(it.file.name);
+  if (isImg(it.file.name)) {
+    body.innerHTML = '';
+    const wrap = document.createElement('div'); wrap.className = 'preview-page-card';
+    const stage = document.createElement('div'); stage.className = 'preview-stage';
+    const img = document.createElement('img');
+    img.src = it.thumb || URL.createObjectURL(it.file);
+    img.alt = it.file.name;
+    img.style.maxHeight = '72vh';
+    stage.appendChild(img); wrap.appendChild(stage);
+    body.appendChild(wrap);
+    return;
+  }
+
+  if (x === 'pdf' && window.pdfjsLib) {
+    try {
+      const bytes = new Uint8Array(await it.file.arrayBuffer());
+      const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+      body.innerHTML = '';
+      for (let n = 1; n <= pdf.numPages; n++) {
+        const wrap = document.createElement('div');
+        wrap.className = 'preview-page-card';
+        wrap.style.animationDelay = `${Math.min(n * 0.05, 0.35)}s`;
+        const lbl = document.createElement('div');
+        lbl.className = 'preview-page-label';
+        lbl.textContent = `Page ${n} of ${pdf.numPages}`;
+        const stage = document.createElement('div');
+        stage.className = 'preview-stage';
+        const page = await pdf.getPage(n);
+        const vp = page.getViewport({ scale: 1.35 });
+        const c = document.createElement('canvas');
+        c.width = Math.ceil(vp.width);
+        c.height = Math.ceil(vp.height);
+        const ctx = c.getContext('2d', { alpha: false });
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, c.width, c.height);
+        await page.render({ canvasContext: ctx, viewport: vp }).promise;
+        stage.appendChild(c);
+        wrap.append(lbl, stage);
+        body.appendChild(wrap);
+        page.cleanup();
+      }
+      pdf.destroy();
+      return;
+    } catch (e) {
+      body.innerHTML = `<div style="color:#fca5a5;padding:20px">Could not render PDF preview: ${e.message || 'error'}</div>`;
+      return;
+    }
+  }
+
+  body.innerHTML = `
+    <div style="background:#1e293b;border:1px solid rgba(255,255,255,.12);padding:28px;border-radius:16px;text-align:center;max-width:380px;animation:modalPop .3s var(--ease)">
+      <div style="font-size:44px;margin-bottom:10px">📄</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:6px;color:#fff">${it.file.name}</div>
+      <div style="font-size:13px;color:#94a3b8;line-height:1.5">Office documents (${x.toUpperCase()}) are sent directly to the counter PC for native printing.</div>
+    </div>`;
+}
+
+function closeFilePreview() {
+  $('filePreviewOverlay').classList.add('hidden');
+  $('filePreviewBody').innerHTML = '';
+}
+$('filePreviewClose').onclick = closeFilePreview;
+$('filePreviewOverlay').addEventListener('click', (e) => {
+  if (e.target === $('filePreviewOverlay')) closeFilePreview();
+});
+window.addEventListener('keydown', (e) => {
+  if ($('filePreviewOverlay').classList.contains('hidden')) return;
+  if (e.key === 'Escape') closeFilePreview();
+  if (e.key === '+' || e.key === '=') $('prevZoomIn').click();
+  if (e.key === '-') $('prevZoomOut').click();
+  if (e.key.toLowerCase() === 'r') $('prevRotate').click();
+});
+
+let passwordResolve = null;
+function askPdfPassword(file, errorText = '') {
+  return new Promise(resolve => {
+    passwordResolve = resolve;
+    $('pdfPasswordMessage').textContent = `“${file.name}” is password-protected. Enter its password to unlock it for printing.`;
+    $('pdfPasswordError').textContent = errorText;
+    $('pdfPasswordInput').value = '';
+    $('pdfPasswordOverlay').classList.remove('hidden');
+    setTimeout(() => $('pdfPasswordInput').focus(), 30);
+  });
+}
+function closePdfPassword(value) {
+  $('pdfPasswordOverlay').classList.add('hidden');
+  const resolve = passwordResolve; passwordResolve = null;
+  if (resolve) resolve(value);
+}
+$('pdfPasswordForm').addEventListener('submit', e => { e.preventDefault(); const value = $('pdfPasswordInput').value; if (value) closePdfPassword(value); });
+$('pdfPasswordCancel').addEventListener('click', () => closePdfPassword(null));
+
+async function makePrintablePdfFromProtected(file) {
+  if (!window.pdfjsLib) throw new Error('PDF unlock library did not load. Check your internet connection and try again.');
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  let password = '';
+  while (true) {
+    password = await askPdfPassword(file, password ? 'That password did not work. Please try again.' : '');
+    if (password === null) return null;
+    try {
+      const task = pdfjsLib.getDocument({data: bytes.slice(), password});
+      const source = await task.promise;
+      const output = await PDFLib.PDFDocument.create();
+      for (let n = 1; n <= source.numPages; n++) {
+        const page = await source.getPage(n);
+        const viewport = page.getViewport({scale: 1.65});
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.ceil(viewport.width); canvas.height = Math.ceil(viewport.height);
+        const ctx = canvas.getContext('2d', {alpha:false});
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        await page.render({canvasContext:ctx, viewport}).promise;
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', .92));
+        if (!blob) throw new Error('Could not prepare page ' + n + ' for printing.');
+        const jpg = await output.embedJpg(await blob.arrayBuffer());
+        const view1 = page.getViewport({scale:1});
+        const outPage = output.addPage([view1.width, view1.height]);
+        outPage.drawImage(jpg, {x:0, y:0, width:view1.width, height:view1.height});
+        page.cleanup(); canvas.width = canvas.height = 1;
+      }
+      source.destroy();
+      const ready = await output.save();
+      return new File([ready], file.name.replace(/\.pdf$/i, '') + '-printable.pdf', {type:'application/pdf'});
+    } catch (err) {
+      const isPassword = err && (err.name === 'PasswordException' || err.code === 1 || err.code === 2 || /password/i.test(err.message || ''));
+      if (isPassword) continue;
+      throw new Error('Could not unlock this PDF: ' + (err.message || 'unsupported or damaged PDF'));
+    }
+  }
+}
+
+$('pick').addEventListener('change', async (e) => {
+  $('err').textContent = '';
+  const selected = Array.from(e.target.files || []);
+  e.target.value = '';
+  for (const original of selected) {
+    if (items.length >= 10) { $('err').textContent = 'Maximum 10 files per order.'; break; }
+    if (original.size > 25 * 1024 * 1024) { $('err').textContent = `${original.name} is over 25 MB.`; continue; }
+    let f = original, pages = 1, canCount = false, orient = 'portrait';
+    const x = ext(original.name);
+    if (x === 'pdf') {
+      try {
+        const doc = await PDFLib.PDFDocument.load(await original.arrayBuffer());
+        pages = doc.getPageCount(); canCount = true;
+      } catch (err) {
+        const encrypted = /encrypt|password|protected/i.test((err && err.message) || '');
+        if (!encrypted) {
+          $('err').textContent = `${original.name}: Could not read this PDF. It may be damaged or unsupported.`;
+          continue;
+        }
+        try {
+          const printable = await makePrintablePdfFromProtected(original);
+          if (!printable) { $('err').textContent = `Skipped protected PDF: ${original.name}`; continue; }
+          f = printable;
+          const doc = await PDFLib.PDFDocument.load(await f.arrayBuffer());
+          pages = doc.getPageCount(); canCount = true;
+          $('err').textContent = `${original.name} unlocked and prepared as a printable PDF. The password was not saved.`;
+        } catch (unlockErr) {
+          $('err').textContent = `${original.name}: ${unlockErr.message || 'Could not unlock PDF.'}`;
+          continue;
+        }
+      }
+    } else if (isImg(f.name)) { canCount = true; orient = await imgOrient(f); }
+    const thumb = await generateThumb(f);
+    items.push({ file: f, pages, canCount, orient, thumb });
+  }
+  render();
+});
+
+function render() {
+  $('list').innerHTML = '';
+  items.forEach((it, i) => {
+    const row = document.createElement('div'); row.className = 'file';
+    row.style.animationDelay = `${i * 0.05}s`;
+    const x = ext(it.file.name).toUpperCase();
+    row.innerHTML = `
+      <div class="file-thumb" title="Click to preview">
+        ${it.thumb ? `<img src="${it.thumb}" alt="preview">` : `<span style="font-size:11px;font-weight:700;color:var(--mute)">FILE</span>`}
+        <div class="zoom-ov">View</div>
+        <span class="badge">${x}</span>
+      </div>
+      <div class="file-info">
+        <div class="n" title="Click to preview"></div>
+        <div class="file-sub"><span>${(it.file.size / 1024).toFixed(0)} KB</span>•<span>${it.pages} page${it.pages > 1 ? 's' : ''}</span></div>
+      </div>
+      <button type="button" class="prev-btn" title="Preview">Preview</button>
+      ${isImg(it.file.name) ? '<button type="button" class="prev-btn crop-btn" title="Crop">Crop</button>' : ''}
+      <input type="number" min="1" max="2000" value="${it.pages}" ${it.canCount ? 'readonly' : ''} title="pages">
+      <span style="font-size:12px;color:var(--mute)">pg</span>
+      <button type="button" class="del-btn" title="Remove">✕</button>`;
+    row.querySelector('.n').textContent = it.file.name;
+    row.querySelector('.file-thumb').onclick = () => openFilePreview(it);
+    row.querySelector('.n').onclick = () => openFilePreview(it);
+    row.querySelector('.prev-btn').onclick = () => openFilePreview(it);
+    const cropBtn = row.querySelector('.crop-btn'); if (cropBtn) cropBtn.onclick = () => openCropModal(it);
+    row.querySelector('input').addEventListener('input', (e) => {
+      it.pages = Math.max(1, parseInt(e.target.value) || 1);
+      row.querySelector('.file-sub').innerHTML = `<span>${(it.file.size / 1024).toFixed(0)} KB</span>•<span>${it.pages} page${it.pages > 1 ? 's' : ''}</span>`;
+      recalc();
+    });
+    row.querySelector('.del-btn').addEventListener('click', () => {
+      if (it.thumb && it.thumb.startsWith('blob:')) URL.revokeObjectURL(it.thumb);
+      items.splice(i, 1);
+      render();
+    });
+    $('list').appendChild(row);
+  });
+  const hasUncounted = items.some((i) => !i.canCount);
+  $('err').textContent = hasUncounted ? 'For Word/Excel/PowerPoint files please enter the number of pages.' : '';
+  $('opts').classList.toggle('hidden', items.length === 0);
+  $('docSplit').classList.toggle('has-items', items.length > 0);
+  recalc();
+}
+
+function recalc() {
+  const copies = Math.min(Math.max(parseInt($('copies').value) || 1, 1), 100);
+  const pages = items.reduce((s, i) => s + i.pages, 0);
+  let amt;
+  if (paper === '4x6') amt = pages * copies * cfg.photo4x6;
+  else amt = pages * copies * (color ? cfg.rate.color : cfg.rate.bw) * (paper === 'A3' ? cfg.a3 : 1);
+  $('pg').textContent = pages; $('cp').textContent = copies; $('amt').textContent = '₹' + amt;
+}
+
+seg('paperSeg', (v) => {
+  paper = v;
+  if (v === '4x6') { color = true; $('col').classList.add('on'); $('bw').classList.remove('on'); $('bw').disabled = true; }
+  else { $('bw').disabled = false; }
+  recalc();
+});
+$('bw').onclick = () => { if ($('bw').disabled) return; color = false; $('bw').classList.add('on'); $('col').classList.remove('on'); recalc(); };
+$('col').onclick = () => { color = true; $('col').classList.add('on'); $('bw').classList.remove('on'); recalc(); };
+$('copies').addEventListener('input', recalc);
+
+$('submit').onclick = async () => {
+  $('err').textContent = '';
+  if (!items.length) return;
+  const btn = $('submit'); btn.disabled = true; btn.textContent = 'Uploading…';
+  const fd = new FormData();
+  fd.append('meta', JSON.stringify({
+    kind: 'doc', paper, name: $('name').value.trim(), phone: $('phone').value.trim(),
+    color: paper === '4x6' ? true : color, copies: parseInt($('copies').value) || 1,
+    pages: items.map((i) => i.pages), orient: items.map((i) => i.orient),
+    info: `${paper} · ${(paper === '4x6' || color) ? 'Color' : 'B&W'}`,
+  }));
+  items.forEach((i) => fd.append('files', i.file, i.file.name));
+  try { showDone(await post(fd)); }
+  catch (e) { $('err').textContent = e.message; btn.disabled = false; btn.textContent = 'Send to counter'; }
+};
+
+async function post(fd) {
+  const r = await fetch('/api/orders', { method: 'POST', body: fd });
+  const d = await r.json();
+  if (!r.ok) throw new Error(d.error || 'Upload failed');
+  return d;
+}
+
+/* =====================================================
+   PASSPORT PHOTO
+   ===================================================== */
+const SIZES = { in: { w: 35, h: 45, label: '35×45 mm' }, us: { w: 50.8, h: 50.8, label: '2×2 inch' }, st: { w: 25, h: 35, label: '25×35 mm' },
+  pass: { w: 30, h: 35, label: 'Passport 3×3.5 cm' }, custom: { w: 35, h: 45, label: 'Custom 35×45 mm' } };
+const PASS_STD = { w: 30, h: 35, label: 'Passport 3×3.5 cm' };      // Passport button: always 3 x 3.5 cm
+function syncPassSize() { if (pp.size === 'pass') SIZES.pass = PASS_STD; }
+const SHEETS = { '4x6': { w: 101.6, h: 152.4 }, A4: { w: 210, h: 297 } };
+const DPI = 300; const MARGIN = 3; const GAP = 2;
+const mm2px = (mm, dpi = DPI) => Math.round(mm / 25.4 * dpi);
+
+function layout(sheetKey, sizeKey) { return layoutP(sheetKey, SIZES[sizeKey]); }
+function layoutP(sheetKey, P) {
+  const S = SHEETS[sheetKey]; let best = null;
+  // 4x6 paper always stays upright (portrait); if more photos fit with them turned sideways, they are rotated 90°.
+  const lands = sheetKey === '4x6' ? [false] : [false, true];
+  const rots = sheetKey === '4x6' ? [false, true] : [false];
+  for (const land of lands) for (const rot of rots) {
+    const W = land ? S.h : S.w, H = land ? S.w : S.h;
+    const cw = rot ? P.h : P.w, ch = rot ? P.w : P.h;
+    const cols = Math.max(0, Math.floor((W - 2 * MARGIN + GAP) / (cw + GAP)));
+    const rows = Math.max(0, Math.floor((H - 2 * MARGIN + GAP) / (ch + GAP)));
+    const n = cols * rows;
+    if (!best || n > best.n) best = { land, rot, W, H, cols, rows, n };
+  }
+  return best;
+}
+
+const pp = { base: null, cutout: null, cutoutBusy: false, bg: '', size: 'in', sheet: '4x6', zoom: 1, ox: 0, oy: 0 };
+const crop = $('crop'); const cctx = crop.getContext('2d');
+
+function sizeCrop() {
+  const P = SIZES[pp.size]; const cssW = 240; const cssH = Math.round(cssW * P.h / P.w);
+  crop.style.width = cssW + 'px'; crop.style.height = cssH + 'px';
+  crop.width = cssW * 2; crop.height = cssH * 2;
+}
+
+function composite() {
+  if (!pp.base) return null;
+  if (!pp.bg || !pp.cutout) return pp.base;
+  // cached: only rebuilt when colour / cutout changes (not on every finger move)
+  if (pp._comp && pp._compBg === pp.bg && pp._compCut === pp.cutout && pp._compBase === pp.base) return pp._comp;
+  const c = document.createElement('canvas'); c.width = pp.base.width; c.height = pp.base.height;
+  const x = c.getContext('2d'); x.fillStyle = pp.bg; x.fillRect(0, 0, c.width, c.height);
+  x.drawImage(pp.cutout, 0, 0, c.width, c.height);
+  pp._comp = c; pp._compBg = pp.bg; pp._compCut = pp.cutout; pp._compBase = pp.base;
+  return c;
+}
+
+function drawCrop(ctx, cw, ch, src) {
+  const P = SIZES[pp.size]; const ar = P.h / P.w; const iw = src.width, ih = src.height;
+  const zmin = Math.max(1, ar * iw / ih); const z = zmin * pp.zoom;
+  const limX = Math.max(0, (z - 1) / 2), limY = Math.max(0, (z * ih / iw - ar) / 2);
+  pp.ox = Math.min(limX, Math.max(-limX, pp.ox)); pp.oy = Math.min(limY, Math.max(-limY, pp.oy));
+  const dw = z * cw, dh = dw * ih / iw;
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, cw, ch);
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(src, cw / 2 + pp.ox * cw - dw / 2, ch / 2 + pp.oy * cw - dh / 2, dw, dh);
+}
+
+let redrawRaf = 0, redrawFull = false;
+function redraw(full = true) {
+  redrawFull = redrawFull || full;
+  if (redrawRaf) return;
+  redrawRaf = requestAnimationFrame(() => { redrawRaf = 0; const f = redrawFull; redrawFull = false; redrawNow(f); });
+}
+function redrawNow(full) {
+  const src = composite(); if (!src) return;
+  drawCrop(cctx, crop.width, crop.height, src);
+  cctx.strokeStyle = 'rgba(255,255,255,.85)'; cctx.lineWidth = 2; cctx.setLineDash([8, 6]);
+  cctx.beginPath(); cctx.ellipse(crop.width / 2, crop.height * 0.42, crop.width * 0.27, crop.height * 0.28, 0, 0, Math.PI * 2); cctx.stroke(); cctx.setLineDash([]);
+  if (full) updateSheet();
+}
+
+let drag = null;
+crop.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, y: e.clientY }; crop.setPointerCapture(e.pointerId); crop.style.cursor = 'grabbing'; });
+crop.addEventListener('pointermove', (e) => {
+  if (!drag) return; const w = crop.getBoundingClientRect().width;
+  pp.ox += (e.clientX - drag.x) / w; pp.oy += (e.clientY - drag.y) / w; drag = { x: e.clientX, y: e.clientY }; redraw(false);
+});
+const endDrag = () => { if (drag) updateSheet(); drag = null; crop.style.cursor = 'grab'; };
+crop.addEventListener('pointerup', endDrag); crop.addEventListener('pointercancel', endDrag);
+$('zoom').addEventListener('input', (e) => { pp.zoom = parseFloat(e.target.value); redraw(false); updateSheet(); });
+
+async function loadBase(file) {
+  const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+  const max = 1600; const sc = Math.min(1, max / Math.max(bmp.width, bmp.height));
+  const c = document.createElement('canvas'); c.width = Math.round(bmp.width * sc); c.height = Math.round(bmp.height * sc);
+  c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+  return c;
+}
+
+$('ppPick').addEventListener('change', async (e) => {
+  const f = e.target.files[0]; if (!f) return; $('ppErr').textContent = '';
+  try {
+    pp.base = await loadBase(f); pp.cutout = null; pp.bg = ''; pp.zoom = 1; pp.ox = 0; pp.oy = 0;
+    $('zoom').value = 1;
+    $('ppWork').classList.remove('hidden');
+    $('ppOpts').classList.remove('hidden');
+    $('ppSplit').classList.add('has-items');
+    $('bgSw').querySelectorAll('button').forEach((x) => x.classList.toggle('on', x.dataset.c === ''));
+    fillCountOptions(); sizeCrop(); redraw(); ppRecalc();
+  } catch { $('ppErr').textContent = 'Could not open this photo. Please use a JPG or PNG.'; }
+});
+
+function applySize() { pp.ox = 0; pp.oy = 0; fillCountOptions(); sizeCrop(); redraw(); ppRecalc(); updateSheet(); }
+function readCustom() {                       // width x height in mm or inch -> SIZES.custom (stored in mm)
+  const u = $('csU').value, k = u === 'in' ? 25.4 : 1;
+  const w = parseFloat($('csW').value) * k, h = parseFloat($('csH').value) * k;
+  if (!(w >= 5 && h >= 5)) return false;
+  const r = (n) => Math.round(n * 100) / 100;
+  SIZES.custom = { w: Math.min(w, 400), h: Math.min(h, 400), label: `Custom ${r(parseFloat($('csW').value))}×${r(parseFloat($('csH').value))} ${u === 'in' ? 'inch' : 'mm'}` };
+  return true;
+}
+seg('sizeSeg', (v) => { pp.size = v; $('customSize').classList.toggle('hidden', v !== 'custom'); if (v === 'custom') readCustom(); applySize(); });
+['csW', 'csH'].forEach((id) => $(id).addEventListener('input', () => { if (pp.size === 'custom' && readCustom()) applySize(); }));
+$('csU').dataset.prev = 'mm';
+$('csU').addEventListener('change', () => {   // convert the typed numbers when mm <-> inch is switched
+  const to = $('csU').value, from = $('csU').dataset.prev; if (to === from) return;
+  const f = to === 'in' ? 1 / 25.4 : 25.4, r = to === 'in' ? 100 : 10;
+  ['csW', 'csH'].forEach((id) => { const v = parseFloat($(id).value); if (v > 0) $(id).value = Math.round(v * f * r) / r; });
+  $('csU').dataset.prev = to; if (pp.size === 'custom' && readCustom()) applySize();
+});
+seg('sheetSeg', (v) => { pp.sheet = v; pp.ox = 0; pp.oy = 0; fillCountOptions(); sizeCrop(); redraw(false); updateSheet(); ppRecalc(); });
+
+let bgLib = null;
+async function ensureCutout() {
+  if (pp.cutout || pp.cutoutBusy || !pp.base) return !!pp.cutout;
+  pp.cutoutBusy = true; $('bgProg').classList.remove('hidden'); $('bgMsg').textContent = 'Removing background… please wait (first time may take a minute).';
+  try {
+    if (!bgLib) bgLib = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm');
+    const rb = bgLib.removeBackground || bgLib.default;
+    const blob = await new Promise((res) => pp.base.toBlob(res, 'image/png'));
+    const out = await rb(blob, { output: { format: 'image/png' }, progress: (key, cur, total) => { if (total) $('bgProg').firstElementChild.style.width = Math.round(cur / total * 100) + '%'; } });
+    pp.cutout = await createImageBitmap(out);
+    $('bgMsg').textContent = 'Done. You can change the colour any time.';
+    return true;
+  } catch (err) {
+    $('bgMsg').textContent = 'Background change did not work on this phone. Your original background will be used.';
+    pp.bg = ''; $('bgSw').querySelectorAll('button').forEach((x) => x.classList.toggle('on', x.dataset.c === ''));
+    return false;
+  } finally { pp.cutoutBusy = false; $('bgProg').classList.add('hidden'); }
+}
+
+async function setBg(c) {
+  if (pp.cutoutBusy) return;
+  pp.bg = c;
+  if (c) { const ok = await ensureCutout(); if (!ok) { pp.bg = ''; } }
+  else $('bgMsg').textContent = 'Original background kept.';
+  redraw();
+}
+$('bgSw').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
+  if (pp.cutoutBusy) return;
+  $('bgSw').querySelectorAll('button').forEach((x) => x.classList.remove('on')); b.classList.add('on'); setBg(b.dataset.c);
+}));
+$('bgCustom').addEventListener('input', (e) => {
+  if (pp.cutoutBusy) return;
+  $('bgSw').querySelectorAll('button').forEach((x) => x.classList.remove('on')); setBg(e.target.value);
+});
+
+function fillCountOptions() {
+  const sel = $('ppCount'); sel.innerHTML = '';
+  if (pp.size === 'pass') {                      // Passport button: only 3 / 6 / 9 / 12 copies
+    [3, 6, 9, 12].forEach((n) => {
+      const o = document.createElement('option'); o.value = n;
+      o.textContent = n + ' copies' + (n === 12 && pp.sheet === '4x6' ? ' (full 4×6 sheet)' : '');
+      sel.appendChild(o);
+    });
+    sel.value = 12; syncPassSize(); return;
+  }
+  const L = layout(pp.sheet, pp.size);
+  const full = Math.max(1, L.n);
+  const opts = new Set([1, 2, 4, 6, 8, 12, 16, full]);
+  [...opts].sort((a, b) => a - b).forEach((n) => {
+    const o = document.createElement('option'); o.value = n;
+    o.textContent = n + (n === 1 ? ' photo' : ' photos') + (n === full ? ' (full sheet)' : '');
+    sel.appendChild(o);
+  });
+  sel.value = full;          // every size/sheet change starts from one full sheet
+}
+$('ppCount').addEventListener('change', () => {
+  updateSheet(); ppRecalc();
+});
+
+function buildPhotoCanvas(dpi = DPI) {
+  const P = SIZES[pp.size]; const c = document.createElement('canvas'); c.width = mm2px(P.w, dpi); c.height = mm2px(P.h, dpi);
+  drawCrop(c.getContext('2d'), c.width, c.height, composite()); return c;
+}
+
+function buildSheet(count, dpi = DPI) {
+  const L = layout(pp.sheet, pp.size);
+  const c = document.createElement('canvas'); c.width = mm2px(L.W, dpi); c.height = mm2px(L.H, dpi);
+  const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+  let photo = buildPhotoCanvas(dpi);
+  if (L.rot) {                                   // turn each photo 90° so the sheet itself can stay upright
+    const rc = document.createElement('canvas'); rc.width = photo.height; rc.height = photo.width;
+    const rx = rc.getContext('2d'); rx.translate(rc.width / 2, rc.height / 2); rx.rotate(Math.PI / 2); rx.drawImage(photo, -photo.width / 2, -photo.height / 2);
+    photo = rc;
+  }
+  const pw = photo.width, ph = photo.height, g = mm2px(GAP, dpi);
+  const gridW = L.cols * pw + (L.cols - 1) * g, gridH = L.rows * ph + (L.rows - 1) * g;
+  const x0 = Math.round((c.width - gridW) / 2), y0 = Math.round((c.height - gridH) / 2);
+  let n = 0;
+  for (let r = 0; r < L.rows && n < count; r++) for (let k = 0; k < L.cols && n < count; k++, n++) {
+    const px = x0 + k * (pw + g), py = y0 + r * (ph + g);
+    x.drawImage(photo, px, py); x.strokeStyle = '#bdbdbd'; x.lineWidth = 1; x.strokeRect(px + 0.5, py + 0.5, pw - 1, ph - 1);
+  }
+  return { canvas: c, land: L.land };
+}
+
+function ppPlan() {
+  const L = layout(pp.sheet, pp.size); const want = parseInt($('ppCount').value) || L.n;
+  const perSheet = Math.min(want, L.n); const sheets = Math.max(1, Math.ceil(want / L.n));
+  return { L, want, perSheet, sheets };
+}
+
+let sheetTimer = null;
+function updateSheet() {
+  if (!pp.base) return; clearTimeout(sheetTimer);
+  sheetTimer = setTimeout(() => {
+    if (layout(pp.sheet, pp.size).n < 1) { $('sheetPrev').classList.add('hidden'); return; }
+    const { perSheet } = ppPlan(); const { canvas } = buildSheet(perSheet, 100); // small preview only
+    $('sheetPrev').src = canvas.toDataURL('image/jpeg', 0.75); $('sheetPrev').classList.remove('hidden');
+  }, 300);
+}
+
+function ppRecalc() {
+  if (!pp.base) return; const { L, perSheet, sheets } = ppPlan();
+  const price = cfg.passport[pp.sheet] || 0;
+  const tooBig = L.n < 1; $('ppSubmit').disabled = tooBig;
+  $('ppInfo').textContent = tooBig ? `This size is too big for the ${pp.sheet === '4x6' ? '4×6' : 'A4'} sheet. Choose A4 or make it smaller.`
+    : (pp.size === 'pass' ? `Photo size: ${SIZES.pass.label.replace('Passport ', '')}. ` : '') + `${L.n} photo${L.n > 1 ? 's' : ''} fit${L.n > 1 ? '' : 's'} on one ${pp.sheet === '4x6' ? '4×6' : 'A4'} sheet.` + (L.rot ? ' Photos are placed sideways so the page stays upright.' : '') + (L.n === 1 && pp.sheet === '4x6' ? ' Choose A4 or a smaller size to fit more copies.' : '');
+  if (tooBig) { $('ppSum').textContent = 'Size does not fit'; $('ppAmt').textContent = '₹0'; return; }
+  $('ppSum').textContent = `${sheets} sheet${sheets > 1 ? 's' : ''} · ${perSheet} photo${perSheet > 1 ? 's' : ''} each`;
+  $('ppAmt').textContent = '₹' + sheets * price;
+}
+
+$('ppSubmit').onclick = async () => {
+  $('ppErr').textContent = ''; if (!pp.base) return;
+  if (pp.cutoutBusy) { $('ppErr').textContent = 'Please wait, background is still being processed.'; return; }
+  const btn = $('ppSubmit'); btn.disabled = true; btn.textContent = 'Preparing…';
+  try {
+    const { perSheet, sheets, want } = ppPlan(); const { canvas, land } = buildSheet(perSheet);
+    const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.95));
+    const fd = new FormData();
+    fd.append('meta', JSON.stringify({
+      kind: 'passport', paper: pp.sheet, name: $('ppName').value.trim(), phone: $('ppPhone').value.trim(),
+      color: true, copies: sheets, pages: [1], orient: [land ? 'landscape' : 'portrait'],
+      info: `${/^Passport/.test(SIZES[pp.size].label) ? '' : 'Passport '}${SIZES[pp.size].label} · ${want} photos · bg ${pp.bg || 'original'}`,
+    }));
+    fd.append('files', blob, 'passport_sheet.jpg');
+    btn.textContent = 'Uploading…';
+    showDone(await post(fd));
+  } catch (e) { $('ppErr').textContent = e.message || 'Something went wrong'; btn.disabled = false; btn.textContent = 'Send to counter'; }
+};
+
+/* =====================================================
+   DONE SCREEN
+   ===================================================== */
+const LABEL = {
+  pending: 'Waiting for counter approval…', approved: 'Approved. Sending to printer…', printing: 'Printing now',
+  printed: 'Printed. Please collect from the counter.', rejected: 'Rejected by counter', error: 'Printer problem. Please tell the counter.',
+};
+function showDone(d) {
+  $('docForm').classList.add('hidden'); $('ppForm').classList.add('hidden'); document.querySelector('.tabs').classList.add('hidden'); document.querySelector('.tools-strip').classList.add('hidden'); window.scrollTo(0, 0);
+  $('done').classList.remove('hidden'); $('oid').textContent = d.id;
+  const amount = Number(d.amount);
+  $('oamt').textContent = `Exact amount to pay: ₹${amount.toFixed(2)}`;
+  $('makePayment').onclick = async () => {
+    if (!Number.isFinite(amount) || amount <= 0) { $('upiAmount').textContent = 'Invalid payment amount'; $('upiDetails').classList.remove('hidden'); return; }
+    const btn = $('makePayment'); btn.disabled = true; btn.classList.add('hidden');
+    $('upiAmount').textContent = 'Preparing your payment QR…'; $('upiDetails').classList.remove('hidden');
+    try {
+      const r = await fetch('/api/orders/' + d.id + '/pay', { method: 'POST' });
+      const txt = await r.text(); let j = {};
+      try { j = JSON.parse(txt); } catch { throw new Error('Server answered with a web page instead of data (HTTP ' + r.status + '). Redeploy _worker.js and try again.'); }
+      if (!j.payment_url) throw new Error(j.error || 'Could not start payment');
+      $('upiAmount').textContent = `Pay exactly ₹${amount.toFixed(2)}`;
+      $('upiLink').href = j.payment_url;
+      if (j.mode === 'direct') $('payHint').textContent = 'After you pay, show this screen at the counter. Printing starts as soon as the counter confirms your payment.';
+      $('upiQr').innerHTML = '';
+      const ui = j.upi_intent || {};
+      const generic = [ui.bhim, ui.gpay, ui.phonepe, ui.paytm].find((u) => u && /^upi:\/\//.test(u) && /[?&]am=/.test(u));   // a real UPI QR (has the amount)
+      const qrText = generic || j.payment_url;
+      $('qrHint').textContent = generic ? 'Scan this QR inside any UPI app (PhonePe, GPay, Paytm, BHIM).'
+        : 'Scan this QR with your phone Camera or Google Lens (not inside a UPI app) – it opens the payment page.';
+      if (window.QRCode) new QRCode($('upiQr'), { text: qrText, width: 200, height: 200, correctLevel: QRCode.CorrectLevel.M });
+      $('appBtns').innerHTML = '';
+      [['phonepe', 'PhonePe'], ['gpay', 'GPay'], ['paytm', 'Paytm'], ['bhim', 'BHIM']].forEach(([k, name]) => {
+        if (!ui[k]) return;
+        const a = document.createElement('a'); a.href = ui[k]; a.textContent = 'Pay with ' + name;
+        a.style.cssText = 'padding:9px 14px;border-radius:8px;background:#0f1b2d;color:#fff;font-weight:600;font-size:13.5px;text-decoration:none';
+        $('appBtns').appendChild(a);
+      });
+      $('upiDetails').classList.remove('hidden');
+      if (/Android|iPhone|iPad|Mobile/i.test(navigator.userAgent)) window.open(j.payment_url, '_blank');
+    } catch (e) {
+      $('upiAmount').textContent = e.message || 'Could not start payment';
+      $('upiDetails').classList.remove('hidden');
+      btn.disabled = false; btn.classList.remove('hidden'); btn.textContent = 'Try payment again';
+    }
+  };
+  if (amount > 0) $('makePayment').onclick();   // QR appears automatically, no click needed
+  const poll = async () => {
+    try {
+      const o = await (await fetch('/api/orders/' + d.id)).json();
+      $('ost').className = 'status s-' + o.status; $('ost').textContent = (o.status === 'pending' && o.paying) ? 'Waiting for your payment…' : (LABEL[o.status] || o.status);
+      if (o.pay_status === 'paid') { $('paymentBox').innerHTML = '<div style="font-weight:800;color:var(--brand-ink);font-size:18px">Payment received. Thank you!</div>'; if (o.status === 'approved') $('ost').textContent = 'Payment received. Sending to printer…'; }
+      if (['printed', 'rejected'].includes(o.status)) return;
+    } catch {}
+    setTimeout(poll, 3000);
+  };
+  poll();
+}
+
+/* shared helpers for the free-hand crop window */
+const SCAN_MIN = 0.03;
+function scanPt(st, e) { const r = st.canvas.getBoundingClientRect(); return { x: Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), y: Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)), rw: r.width, rh: r.height }; }
+function scanHit(st, p) {
+  const q = st.crop; if (!q) return 'new';
+  const tx = 22 / p.rw, ty = 22 / p.rh;
+  const nl = Math.abs(p.x - q.x) < tx, nr = Math.abs(p.x - q.x - q.w) < tx, nt = Math.abs(p.y - q.y) < ty, nb = Math.abs(p.y - q.y - q.h) < ty;
+  const inX = p.x > q.x - tx && p.x < q.x + q.w + tx, inY = p.y > q.y - ty && p.y < q.y + q.h + ty;
+  if (nl && nt) return 'nw'; if (nr && nt) return 'ne'; if (nl && nb) return 'sw'; if (nr && nb) return 'se';
+  if (nt && inX) return 'n'; if (nb && inX) return 's'; if (nl && inY) return 'w'; if (nr && inY) return 'e';
+  if (p.x > q.x && p.x < q.x + q.w && p.y > q.y && p.y < q.y + q.h) return 'move';
+  return 'new';
+}
+const SCAN_CURSOR = { nw: 'nwse-resize', se: 'nwse-resize', ne: 'nesw-resize', sw: 'nesw-resize', n: 'ns-resize', s: 'ns-resize', w: 'ew-resize', e: 'ew-resize', move: 'move', 'new': 'crosshair' };
+
+/* =====================================================
+   DOCUMENTS / PHOTOS: free-hand crop (same system as Smart Scanner, no auto crop)
+   ===================================================== */
+const cm = { it: null, full: null, disp: null, rot: 0, crop: null, drag: null, raf: 0, canvas: $('cmCanvas') };
+function cmRotated(src, maxSide) {
+  const sc = Math.min(1, maxSide / Math.max(src.width, src.height));
+  const w = Math.max(1, Math.round(src.width * sc)), h = Math.max(1, Math.round(src.height * sc));
+  const sw = cm.rot % 180 !== 0;
+  const c = document.createElement('canvas'); c.width = sw ? h : w; c.height = sw ? w : h;
+  const x = c.getContext('2d'); x.translate(c.width / 2, c.height / 2); x.rotate(cm.rot * Math.PI / 180);
+  x.drawImage(src, -w / 2, -h / 2, w, h);
+  return c;
+}
+function cmDraw() {
+  const c = cm.canvas, ctx = c.getContext('2d'), k = cm.disp; if (!k) return;
+  if (c.width !== k.width || c.height !== k.height) { c.width = k.width; c.height = k.height; }
+  const W = c.width, H = c.height;
+  ctx.clearRect(0, 0, W, H); ctx.drawImage(k, 0, 0);
+  if (!cm.crop) return;
+  const q = cm.crop, x = q.x * W, y = q.y * H, w = q.w * W, h = q.h * H, lw = Math.max(2, W / 260);
+  ctx.save(); ctx.fillStyle = 'rgba(15,23,42,.5)';
+  ctx.fillRect(0, 0, W, y); ctx.fillRect(0, y + h, W, H - y - h); ctx.fillRect(0, y, x, h); ctx.fillRect(x + w, y, W - x - w, h);
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = lw + 2; ctx.strokeRect(x, y, w, h);
+  ctx.strokeStyle = '#0e7c66'; ctx.lineWidth = lw; ctx.strokeRect(x, y, w, h);
+  ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.lineWidth = 1; ctx.beginPath();
+  for (let n = 1; n < 3; n++) { ctx.moveTo(x + w * n / 3, y); ctx.lineTo(x + w * n / 3, y + h); ctx.moveTo(x, y + h * n / 3); ctx.lineTo(x + w, y + h * n / 3); }
+  ctx.stroke();
+  const hs = Math.max(9, W / 48); ctx.fillStyle = '#0e7c66'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+  [[x, y], [x + w, y], [x, y + h], [x + w, y + h], [x + w / 2, y], [x + w / 2, y + h], [x, y + h / 2], [x + w, y + h / 2]]
+    .forEach(([px, py]) => { ctx.fillRect(px - hs / 2, py - hs / 2, hs, hs); ctx.strokeRect(px - hs / 2, py - hs / 2, hs, hs); });
+  ctx.restore();
+}
+function cmQueue() { if (cm.raf) return; cm.raf = requestAnimationFrame(() => { cm.raf = 0; cmDraw(); }); }
+async function openCropModal(it) {
+  cm.it = it; cm.rot = 0; cm.crop = null; cm.drag = null; cm.full = null; cm.disp = null;
+  $('cmTitle').textContent = 'Crop photo';
+  $('cmStatus').textContent = 'Loading photo…';
+  cm.canvas.width = 320; cm.canvas.height = 180;
+  $('cropOverlay').classList.remove('hidden');
+  try {
+    const bmp = await createImageBitmap(it.file, { imageOrientation: 'from-image' });
+    const s = Math.min(1, 4000 / Math.max(bmp.width, bmp.height)); // keep print quality, protect phone memory
+    const full = document.createElement('canvas'); full.width = Math.round(bmp.width * s); full.height = Math.round(bmp.height * s);
+    full.getContext('2d').drawImage(bmp, 0, 0, full.width, full.height); bmp.close && bmp.close();
+    cm.full = full; cm.disp = cmRotated(full, 1000); cmDraw();
+    $('cmStatus').textContent = 'Drag on the photo to draw any crop box · drag corners/edges to resize · drag inside to move';
+  } catch { $('cmStatus').textContent = 'Could not open this image.'; }
+}
+function closeCropModal() { $('cropOverlay').classList.add('hidden'); cm.full = cm.disp = null; cm.it = null; }
+$('cmCancel').onclick = closeCropModal;
+$('cmReset').onclick = () => { cm.crop = null; cmDraw(); $('cmStatus').textContent = 'Crop cleared — the full image will be used.'; };
+$('cmRotate').onclick = () => { if (!cm.full) return; cm.rot = (cm.rot + 90) % 360; cm.crop = null; cm.disp = cmRotated(cm.full, 1000); cmDraw(); };
+window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('cropOverlay').classList.contains('hidden')) closeCropModal(); });
+cm.canvas.addEventListener('pointerdown', (e) => {
+  if (!cm.disp) return; e.preventDefault();
+  const p = scanPt(cm, e), mode = scanHit(cm, p);
+  cm.drag = { mode, start: p, orig: cm.crop ? { ...cm.crop } : null };
+  if (mode === 'new') cm.crop = { x: p.x, y: p.y, w: 0, h: 0 };
+  cm.canvas.setPointerCapture(e.pointerId); cmQueue();
+});
+cm.canvas.addEventListener('pointermove', (e) => {
+  if (!cm.disp) return; const p = scanPt(cm, e);
+  if (!cm.drag) { cm.canvas.style.cursor = SCAN_CURSOR[scanHit(cm, p)]; return; }
+  e.preventDefault(); const d = cm.drag, o = d.orig;
+  if (d.mode === 'new') cm.crop = { x: Math.min(d.start.x, p.x), y: Math.min(d.start.y, p.y), w: Math.abs(p.x - d.start.x), h: Math.abs(p.y - d.start.y) };
+  else if (d.mode === 'move') cm.crop = { x: Math.min(1 - o.w, Math.max(0, o.x + p.x - d.start.x)), y: Math.min(1 - o.h, Math.max(0, o.y + p.y - d.start.y)), w: o.w, h: o.h };
+  else {
+    let L = o.x, R = o.x + o.w, T = o.y, B = o.y + o.h;
+    if (d.mode.includes('w')) L = p.x; if (d.mode.includes('e')) R = p.x; if (d.mode.includes('n')) T = p.y; if (d.mode.includes('s')) B = p.y;
+    cm.crop = { x: Math.min(L, R), y: Math.min(T, B), w: Math.abs(R - L), h: Math.abs(B - T) };
+  }
+  cmQueue();
+});
+const cmFinish = () => {
+  if (!cm.drag) return; cm.drag = null;
+  if (cm.crop && (cm.crop.w < SCAN_MIN || cm.crop.h < SCAN_MIN)) cm.crop = null;
+  cmDraw();
+  $('cmStatus').textContent = cm.crop ? 'Crop selected. Adjust corners/edges, or tap “Apply crop”.' : 'No crop selected — the full image will be used.';
+};
+cm.canvas.addEventListener('pointerup', cmFinish); cm.canvas.addEventListener('pointercancel', cmFinish);
+
+$('cmApply').onclick = async () => {
+  const it = cm.it; if (!it || !cm.full) return;
+  if (!cm.crop && cm.rot === 0) { closeCropModal(); return; }
+  const btn = $('cmApply'); btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const rotated = cmRotated(cm.full, 99999);
+    let out = rotated;
+    if (cm.crop) {
+      const x = Math.max(0, Math.round(cm.crop.x * rotated.width)), y = Math.max(0, Math.round(cm.crop.y * rotated.height));
+      const w = Math.max(1, Math.min(rotated.width - x, Math.round(cm.crop.w * rotated.width))), h = Math.max(1, Math.min(rotated.height - y, Math.round(cm.crop.h * rotated.height)));
+      out = document.createElement('canvas'); out.width = w; out.height = h; out.getContext('2d').drawImage(rotated, x, y, w, h, 0, 0, w, h);
+    }
+    const isPng = ext(it.file.name) === 'png';
+    const type = isPng ? 'image/png' : 'image/jpeg';
+    const blob = await new Promise((res) => out.toBlob(res, type, 0.95));
+    if (!blob) throw new Error('Could not save the cropped photo.');
+    const base = it.file.name.replace(/\.[^.]+$/, '');
+    const newFile = new File([blob], base + (isPng ? '.png' : '.jpg'), { type });
+    if (it.thumb && it.thumb.startsWith('blob:')) URL.revokeObjectURL(it.thumb);
+    it.file = newFile; it.thumb = URL.createObjectURL(newFile); it.orient = out.width > out.height ? 'landscape' : 'portrait';
+    closeCropModal(); render();
+  } catch (e) { $('cmStatus').textContent = e.message || 'Crop failed.'; }
+  finally { btn.disabled = false; btn.textContent = '✓ Apply crop'; }
+};
+/* back from the Paytm page (or the Card tools): show token + payment status */
+const _ro = location.hash.match(/order=([A-Z0-9]+)/);
+if (_ro) fetch('/api/orders/' + _ro[1]).then((r) => r.json()).then((o) => { if (o && o.id) showDone({ id: o.id, amount: o.amount }); }).catch(() => {});
+</script>
+</body>
+</html>
